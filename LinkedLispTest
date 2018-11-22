@@ -1,0 +1,319 @@
+
+/**
+ * test files for LinkedLisp
+ * 
+ * @author isaacsutor
+ * @version 20171012
+ */
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+/**
+ * LinkedLisp tests the LispADT to make a LinkedList which is dynamic
+ * 
+ * @author isaacsutor
+ * @version 20171012
+ *
+ */
+public class LinkedLispTest {
+    /**
+     * tests size
+     */
+    @Test
+    public void testsizeForZeroOneandMoreThanOne() {
+        LispADT alisp = new LinkedLisp();
+        Integer actual = alisp.size();
+        Integer expected = 0;
+        assertEquals("This test should produce:", expected, actual);
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        actual = alisp.size();
+        expected = 1;
+        assertEquals("This test should produce:", expected, actual);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        actual = alisp.size();
+        expected = 4;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * tests the remove method at more than one, one, and when the list is empty
+     */
+    @Test
+    public void testRemoveWhensizeLotsOneorEmpty() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.remove();
+        Integer actual = alisp.size();
+        Integer expected = 3;
+        assertEquals("This test should produce:", expected, actual);
+        alisp.remove();
+        alisp.remove();
+        alisp.remove();
+        actual = alisp.size();
+        expected = 0;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * tests get for throwing an exception
+     */
+    @Test(expected = RuntimeException.class)
+    public void testGetException() {
+        LispADT alisp = new LinkedLisp();
+        Object actual = alisp.get();
+        Object expected = 'a';
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * tests get for throwing an exception due to null curr
+     */
+    @Test(expected = RuntimeException.class)
+    public void testGetException2() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = null;
+        alisp.add(node1);
+        alisp.add(node2);
+        Object actual = alisp.get();
+        Object expected = 'a';
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * tests method next
+     */
+    @Test
+    public void testNext() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(0);
+        alisp.next();
+        Object actual = alisp.get();
+        Object expected = 'c';
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * tests method prev
+     */
+    @Test
+    public void testPrev() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(0);
+        alisp.next();
+        alisp.next();
+        alisp.prev();
+        Object actual = alisp.get();
+        Object expected = 'c';
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Tests curPos when list is empty
+     */
+    @Test
+    public void testCurPosReturnsZeroConstructor() {
+        LispADT alisp = new LinkedLisp();
+        Integer actual = alisp.curPos();
+        Integer expected = 0;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Tests curPos when on first element
+     */
+    @Test
+    public void testCurPosReturnsZero() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        alisp.add(node1);
+        alisp.moveTo(0);
+        Integer actual = alisp.curPos();
+        Integer expected = 0;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Tests curPos when on any node
+     */
+    @Test
+    public void testCurPosReturnsGreaterThanZero() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(0);
+        alisp.next();
+        alisp.next();
+        alisp.next();
+        Integer actual = alisp.curPos();
+        Integer expected = 3;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Tests the add method when the cursor is not at the head
+     */
+    @Test
+    public void testaddWhenNotHead() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.moveTo(0);
+        alisp.next();
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(0);
+        alisp.remove();
+        Integer actual = alisp.size();
+        Integer expected = 3;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Tests the remove method when the cursor is at the head and size is one
+     */
+    @Test
+    public void testRemoveWhenHeadAndSizeIsOne() {
+        LispADT alisp = new LinkedLisp();
+        alisp.remove();
+        Object node1 = 'a';
+        alisp.add(node1);
+        alisp.remove();
+        Integer actual = alisp.size();
+        Integer expected = 0;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Test to see if toString works
+     */
+    @Test
+    public void testToString() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        String actual = alisp.toString();
+        String expected = "< | d , c , b , a >";
+        assertEquals("This test should produce:", expected, actual);
+        alisp.moveTo(3);
+        expected = "< d , c , b | a >";
+        actual = alisp.toString();
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Test to see if equals works
+     */
+    @Test
+    public void testEquals() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        LispADT blisp = new LinkedLisp();
+        blisp.add(node1);
+        blisp.add(node2);
+        blisp.add(node3);
+        blisp.add(node4);
+        boolean actual = alisp.equals(blisp);
+        boolean expected = true;
+        // String expected = "< | d , c , b , a >";
+        assertEquals("This test should produce:", expected, actual);
+        alisp.add(node1);
+        // expected = "< d , c , b | a >";
+        actual = alisp.equals(blisp);
+        expected = false;
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Test to see if moveTo works for negative number
+     */
+    @Test
+    public void testMoveToNegative() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(-1);
+        String expected = "< | d , c , b , a >";
+        String actual = alisp.toString();
+        assertEquals("This test should produce:", expected, actual);
+    }
+
+    /**
+     * Test to see if moveTo works for larger than size
+     */
+    @Test
+    public void testMoveToLarge() {
+        LispADT alisp = new LinkedLisp();
+        Object node1 = 'a';
+        Object node2 = 'b';
+        Object node3 = 'c';
+        Object node4 = 'd';
+        alisp.add(node1);
+        alisp.add(node2);
+        alisp.add(node3);
+        alisp.add(node4);
+        alisp.moveTo(100);
+        String expected = "< | d , c , b , a >";
+        String actual = alisp.toString();
+        assertEquals("This test should produce:", expected, actual);
+    }
+}
